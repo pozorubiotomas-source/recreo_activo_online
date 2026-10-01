@@ -14,8 +14,8 @@
 <section id="mine" class="screen"><h2>Mis actividades</h2><div id="mineList"></div><div class="card"><h3>Mi perfil</h3><input id="profileName" placeholder="Nombre"><input id="profileCourse" placeholder="Curso, ej. 4°A"><button class="btn primary" onclick="saveProfile()">Guardar perfil</button></div></section>
 </div></div><div id="toast" class="toast"></div>
 <script>
-const SUPABASE_URL='PEGA_AQUI_TU_SUPABASE_URL';
-const SUPABASE_KEY='PEGA_AQUI_TU_PUBLISHABLE_KEY';
+const SUPABASE_URL='https://bwgpvgezumvyrxbkqrbe.supabase.co';
+const SUPABASE_KEY='sb_publishable_BUjZB9Q60WsgiRkWrRUrsw_98SunFRd';
 const configured=!SUPABASE_URL.startsWith('PEGA_')&&!SUPABASE_KEY.startsWith('PEGA_');
 let sb=null, user=null, activities=[];
 if(configured) sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
