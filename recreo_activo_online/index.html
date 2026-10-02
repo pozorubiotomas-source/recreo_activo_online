@@ -340,7 +340,8 @@ label{
 }</style></head><body>
 <header><div class="brand"><img src="logo.png"><div><h1>Recreo Activo</h1><p>Tu recreo, tu actividad.</p></div></div></header>
 <div class="wrap">
-<div id="auth" class="card center"><img src="logo.png" class="logoBig"><h2>Únete a Recreo Activo</h2><p class="muted">Conecta con tus compañeros y organiza actividades durante los recreos.</p><div id="authMsg"></div><input id="email" type="email" placeholder="Correo electrónico"><input id="password" type="password" placeholder="Contraseña"><div class="row"><button class="btn primary" onclick="login()">Iniciar sesión</button><button class="btn ghost" onclick="signup()">Crear cuenta</button></div></div>
+<div id="auth" class="card center"><img src="logo.png" class="logoBig"><h2>Únete a Recreo Activo</h2><p class="muted">Conecta con tus compañeros y organiza actividades durante los recreos.</p><div id="authMsg"></div><input id="signupName" type="text" placeholder="Nombre y apellido">
+<input id="signupCourse" type="text" placeholder="Curso, ej. 4°A"><input id="email" type="email" placeholder="Correo electrónico"><input id="password" type="password" placeholder="Contraseña"><div class="row"><button class="btn primary" onclick="login()">Iniciar sesión</button><button class="btn ghost" onclick="signup()">Crear cuenta</button></div></div>
 <div id="app" class="hidden">
 <div class="tabs"><button id="tHome" onclick="show('home')">🏠 Inicio</button><button id="tCreate" onclick="show('create')">➕ Crear</button><button id="tMine" onclick="show('mine')">👤 Mis actividades</button><button onclick="logout()">🚪 Salir</button></div>
 <section id="home" class="screen"><div class="topline"><h2>Actividades</h2><button class="btn ghost smallbtn" onclick="loadActivities()">↻ Actualizar</button></div><div id="list"></div></section>
@@ -358,7 +359,8 @@ function msg(m,ok=false){document.getElementById('authMsg').innerHTML=`<div clas
 function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');['home','create','mine'].forEach(x=>{let b=document.getElementById('t'+x[0].toUpperCase()+x.slice(1));if(b)b.classList.toggle('active',x===id)});if(id==='home')loadActivities();if(id==='mine')loadMine()}
 async function signup(){
   if(!configured)return msg('Primero configura Supabase en este archivo.');
-
+  let signupName=document.getElementById('signupName').value.trim();
+  let signupCourse=document.getElementById('signupCourse').value.trim();
   let email=document.getElementById('email').value.trim();
   let password=document.getElementById('password').value;
 
@@ -368,7 +370,16 @@ async function signup(){
   msg('Creando cuenta...');
 
   try{
-    let {data,error}=await sb.auth.signUp({email,password});
+    let {data,error}=await sb.auth.signUp({
+  email,
+  password,
+  options:{
+    data:{
+      name:signupName,
+      course:signupCourse
+    }
+  }
+});
 
     if(error){
       msg('Error: '+error.message);
