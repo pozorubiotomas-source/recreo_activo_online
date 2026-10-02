@@ -28,30 +28,6 @@ async function signup(){
   let email=document.getElementById('email').value.trim();
   let password=document.getElementById('password').value;
 
-  if(!email || password.length<6){
-    return msg('Usa un correo y una contraseña de al menos 6 caracteres.');
-  }
-
-  let {data,error}=await sb.auth.signUp({email,password});
-
-  if(error){
-    return msg('Error: '+error.message);
-  }
-
-  if(data.user){
-    await sb.from('profiles').upsert({
-      id:data.user.id,
-      name:email.split('@')[0],
-      course:''
-    });
-
-    msg('Cuenta creada correctamente. Ahora intenta iniciar sesión.',true);
-  }
-}  if(!configured)return msg('Primero configura Supabase en este archivo.');
-
-  let email=document.getElementById('email').value.trim();
-  let password=document.getElementById('password').value;
-
   if(!email || password.length<6)
     return msg('Usa un correo y una contraseña de al menos 6 caracteres.');
 
@@ -81,6 +57,7 @@ async function signup(){
   }catch(e){
     msg('Error: '+e.message);
   }
+}
 }async function login(){if(!configured)return msg('Primero configura Supabase en este archivo.');let email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;let {data,error}=await sb.auth.signInWithPassword({email,password});if(error)return msg(error.message);user=data.user;enterApp()}
 async function logout(){if(sb)await sb.auth.signOut();location.reload()}
 async function enterApp(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');show('home');loadProfile()}
