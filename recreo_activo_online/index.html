@@ -58,7 +58,7 @@ async function signup(){
     msg('Error: '+e.message);
   }
 }
-}async function login(){if(!configured)return msg('Primero configura Supabase en este archivo.');let email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;let {data,error}=await sb.auth.signInWithPassword({email,password});if(error)return msg(error.message);user=data.user;enterApp()}
+async function login(){if(!configured)return msg('Primero configura Supabase en este archivo.');let email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;let {data,error}=await sb.auth.signInWithPassword({email,password});if(error)return msg(error.message);user=data.user;enterApp()}
 async function logout(){if(sb)await sb.auth.signOut();location.reload()}
 async function enterApp(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');show('home');loadProfile()}
 async function createActivity(){let name=document.getElementById('name').value.trim();if(!name)return toast('Escribe un nombre.');let row={creator_id:user.id,name,type:document.getElementById('type').value,time:document.getElementById('time').value||'Por definir',place:document.getElementById('place').value||'Por definir',spots:Math.max(2,Number(document.getElementById('spots').value)||10)};let {error}=await sb.from('activities').insert(row);if(error)return toast(error.message);['name','time','place'].forEach(id=>document.getElementById(id).value='');toast('Actividad publicada');show('home')}
