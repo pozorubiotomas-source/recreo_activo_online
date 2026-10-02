@@ -422,8 +422,7 @@ function card(a){
     <p class="muted">Creado por ${esc(creator)}</p>
 
     <div class="people">
-      ${(a.participants||[]).map(p=>esc(p.profiles?.name||'Usuario')).join(', ')}
-    </div>
+${(a.participants||[]).map(p=>esc(p.profiles?.name||'Usuario')+(p.profiles?.course?' — '+esc(p.profiles.course):'')).join(', ')}    </div>
 
     <br>
 
