@@ -27,6 +27,88 @@
 .card p{
   margin:8px 0;
   line-height:1.5;
+}/* Diseño mejorado de botones */
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:11px 17px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.primary{
+  background:#2563eb;
+  color:#fff;
+  box-shadow:0 4px 12px rgba(37,99,235,.22);
+}
+
+.primary:hover{
+  background:#1d4ed8;
+}
+
+.danger{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+.danger:hover{
+  background:#fecaca;
+}
+
+.ghost{
+  background:#eef2f7;
+  color:#334155;
+}
+
+.ghost:hover{
+  background:#e2e8f0;
+}
+
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+}/* Navegación mejorada */
+.tabs{
+  display:flex;
+  gap:8px;
+  position:sticky;
+  top:8px;
+  z-index:5;
+  background:rgba(255,255,255,.95);
+  padding:8px;
+  margin:10px 0 18px;
+  border-radius:16px;
+  box-shadow:0 5px 18px rgba(15,23,42,.08);
+}
+
+.tabs button{
+  flex:1;
+  border:0;
+  border-radius:11px;
+  padding:11px 6px;
+  font-weight:700;
+  color:#475569;
+  background:transparent;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.tabs button:hover{
+  background:#eef4ff;
+  color:#2563eb;
+}
+
+.tabs button.active{
+  background:#2563eb;
+  color:#fff;
+  box-shadow:0 4px 10px rgba(37,99,235,.20);
 }</style></head><body>
 <header><div class="brand"><img src="logo.png"><div><h1>Recreo Activo</h1><p>Tu recreo, tu actividad.</p></div></div></header>
 <div class="wrap">
