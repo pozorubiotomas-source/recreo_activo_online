@@ -681,23 +681,6 @@ function cancelActivityEdit(){
   show('home');
 }
 
-  if(spots < (a.participants || []).length){
-    toast('No puedes poner menos cupos que participantes inscritos.');
-    return;
-  }
-
-  const {error} = await sb
-    .from('activities')
-    .update({
-      name: name.trim(),
-      time: time.trim(),
-      place: place.trim(),
-      spots: spots
-    })
-    .eq('id', id)
-    .eq('creator_id', user.id);
-
- 
   if(!activities || activities.length===0){
     list.innerHTML='<div class="empty">No hay actividades todavía.</div>';
     return;
