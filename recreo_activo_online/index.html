@@ -1,4 +1,4 @@
-<!doctype html>
+{<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recreo Activo</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -366,8 +366,14 @@ header{
 
 /* Logo */
 .brand img{
+  width:90px;
+  height:90px;
+  object-fit:cover;
   background:#fff;
   border:3px solid rgba(255,255,255,.9);
+  border-radius:22px;
+  padding:0;
+  box-shadow:0 5px 15px rgba(38,35,56,.18);
 }
 
 /* Navegación */
@@ -462,8 +468,14 @@ select:focus{
 .danger:hover{
   background:#ffd5e7;
 }</style></head><body>
-<header><div class="brand"><img src="logo.png"><div><h1>Recreo Activo</h1><p>Tu recreo, tu actividad.</p></div></div></header>
-<div class="wrap">
+<header>
+  <div class="brand">
+    <img src="logo.png" alt="Recreo Activo">
+    <div>
+      <p class="brandTagline">Tu recreo, tu actividad.</p>
+    </div>
+  </div>
+</header><div class="wrap">
 <div id="auth" class="card center"><img src="logo.png" class="logoBig"><h2>Únete a Recreo Activo</h2><p class="muted">Conecta con tus compañeros y organiza actividades durante los recreos.</p><div id="authMsg"></div><input id="signupName" type="text" placeholder="Nombre y apellido">
 <input id="signupCourse" type="text" placeholder="Curso, ej. 4°A"><input id="email" type="email" placeholder="Correo electrónico"><input id="password" type="password" placeholder="Contraseña"><div class="row"><button class="btn primary" onclick="login()">Iniciar sesión</button><button class="btn ghost" onclick="signup()">Crear cuenta</button></div></div>
 <div id="app" class="hidden">
