@@ -106,7 +106,21 @@ function renderActivities(){
   list.innerHTML=activities.map(card).join('');
 }
 
-async function loadActivities(){let {data,error}=await sb.from('activities').select('*,profiles!activities_creator_id_fkey(name,course),participants(activity_id,user_id,profiles!participants_user_id_fkey(name,course))').order('created_at',{ascending:false});if(error)return document.getElementById('list').innerHTML='<div class="notice">'+error.message+'</div>';activities=data||[];renderActivities()}async function leave(id){let {error}=await sb.from('participants').delete().eq('activity_id',id).eq('user_id',user.id);if(error)return toast(error.message);toast('Saliste de la actividad');loadActivities()}
+async function join(id){
+  let {error}=await sb.from('participants').insert({
+    activity_id:id,
+    user_id:user.id
+  });
+
+  if(error){
+    toast(error.message);
+    return;
+  }
+
+  toast('Te uniste a la actividad');
+  loadActivities();
+}
+loadActivities(){let {data,error}=await sb.from('activities').select('*,profiles!activities_creator_id_fkey(name,course),participants(activity_id,user_id,profiles!participants_user_id_fkey(name,course))').order('created_at',{ascending:false});if(error)return document.getElementById('list').innerHTML='<div class="notice">'+error.message+'</div>';activities=data||[];renderActivities()}async function leave(id){let {error}=await sb.from('participants').delete().eq('activity_id',id).eq('user_id',user.id);if(error)return toast(error.message);toast('Saliste de la actividad');loadActivities()}
 async function removeActivity(id){if(!confirm('¿Eliminar esta actividad?'))return;let {error}=await sb.from('activities').delete().eq('id',id).eq('creator_id',user.id);if(error)return toast(error.message);toast('Actividad eliminada');loadActivities()}
 async function loadMine(){let {data,error}=await sb.from('participants').select('activity_id,activities(*,participants(activity_id,user_id,profiles!participants_user_id_fkey(name,course)))').eq('user_id',user.id);if(error)return document.getElementById('mineList').innerHTML='<div class="notice">'+error.message+'</div>';let arr=(data||[]).map(x=>x.activities).filter(Boolean);document.getElementById('mineList').innerHTML=arr.length?arr.map(card).join(''):'<div class="empty">Todavía no estás inscrito en actividades.</div>';loadProfile()}async function loadProfile(){let {data}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();if(data){document.getElementById('profileName').value=data.name||'';document.getElementById('profileCourse').value=data.course||''}}
 async function saveProfile(){let {error}=await sb.from('profiles').upsert({id:user.id,name:document.getElementById('profileName').value.trim(),course:document.getElementById('profileCourse').value.trim()});if(error)return toast(error.message);toast('Perfil guardado')}
