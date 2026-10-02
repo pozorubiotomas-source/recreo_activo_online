@@ -58,7 +58,30 @@ function card(a){
         : `<button class="btn primary" ${full?'disabled':''} onclick="join('${a.id}')">${full?'Sin cupos':'Unirme'}</button>`
     }
   </div>`;
-}function renderActivities(){
+function renderActivities(){
+  const list=document.getElementById('list');
+
+  if(!activities || activities.length===0){
+    list.innerHTML='<div class="empty">No hay actividades todavía.</div>';
+    return;
+  }
+
+  list.innerHTML=activities.map(card).join('');
+}
+
+async function join(id){
+  let {error}=await sb.from('participants').insert({
+    activity_id:id,
+    user_id:user.id
+  });
+
+  if(error)return toast(error.message);
+
+  toast('Te uniste a la actividad');
+  loadActivities();
+}
+
+async function loadActivities(){
   const list=document.getElementById('list');
 
   if(!activities || activities.length===0){
