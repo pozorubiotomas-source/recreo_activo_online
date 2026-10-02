@@ -421,9 +421,18 @@ function card(a){
     <p>🕒 ${esc(a.time)} · 📍 ${esc(a.place)}</p>
     <p class="muted">Creado por ${esc(creator)}</p>
 
-    <div class="people">
-${(a.participants||[]).map(p=>esc(p.profiles?.name||'Usuario')+(p.profiles?.course?' — '+esc(p.profiles.course):'')).join(', ')}    </div>
-
+  <div class="people">
+  <strong>👥 Participantes (${(a.participants||[]).length}/${a.spots})</strong>
+  <div>
+    ${(a.participants||[]).length
+      ? (a.participants||[]).map(p =>
+          esc(p.profiles?.name||'Usuario') +
+          (p.profiles?.course ? ' — '+esc(p.profiles.course) : '')
+        ).join('<br>')
+      : '<span class="muted">Todavía no hay participantes</span>'
+    }
+  </div>
+</div>
     <br>
 
     ${isCreator
