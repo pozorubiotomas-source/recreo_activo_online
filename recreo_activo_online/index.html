@@ -28,6 +28,30 @@ async function signup(){
   let email=document.getElementById('email').value.trim();
   let password=document.getElementById('password').value;
 
+  if(!email || password.length<6){
+    return msg('Usa un correo y una contraseña de al menos 6 caracteres.');
+  }
+
+  let {data,error}=await sb.auth.signUp({email,password});
+
+  if(error){
+    return msg('Error: '+error.message);
+  }
+
+  if(data.user){
+    await sb.from('profiles').upsert({
+      id:data.user.id,
+      name:email.split('@')[0],
+      course:''
+    });
+
+    msg('Cuenta creada correctamente. Ahora intenta iniciar sesión.',true);
+  }
+}  if(!configured)return msg('Primero configura Supabase en este archivo.');
+
+  let email=document.getElementById('email').value.trim();
+  let password=document.getElementById('password').value;
+
   if(!email || password.length<6)
     return msg('Usa un correo y una contraseña de al menos 6 caracteres.');
 
