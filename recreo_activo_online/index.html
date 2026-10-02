@@ -109,6 +109,104 @@
   background:#2563eb;
   color:#fff;
   box-shadow:0 4px 10px rgba(37,99,235,.20);
+}/* Encabezado mejorado */
+header{
+  background:linear-gradient(135deg,#123d78,#2563eb);
+  color:#fff;
+  padding:22px 26px;
+  border-radius:0 0 28px 28px;
+  box-shadow:0 6px 20px rgba(37,99,235,.15);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  max-width:760px;
+  margin:auto;
+}
+
+.brand img{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:#fff;
+  padding:3px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+.brand h1{
+  margin:0;
+  font-size:27px;
+  font-weight:800;
+}
+
+.brand p{
+  margin:4px 0 0;
+  opacity:.9;
+  font-size:15px;
+}/* Título y botón actualizar */
+.topline{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:20px 0 12px;
+}
+
+.topline h2{
+  margin:0;
+  font-size:24px;
+  font-weight:800;
+  color:#14213d;
+}
+
+.smallbtn{
+  padding:10px 14px;
+  font-size:13px;
+  border-radius:11px;
+}
+
+/* Contador de cupos */
+.card .row strong{
+  background:#eff6ff;
+  color:#1d4ed8;
+  padding:7px 11px;
+  border-radius:10px;
+  font-size:14px;
+  white-space:nowrap;
+}/* Formularios */
+.screen h2{
+  margin:20px 0 18px;
+  font-size:24px;
+  font-weight:800;
+  color:#14213d;
+}
+
+input,select{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid #dbe3ef;
+  border-radius:12px;
+  margin:7px 0 15px;
+  font-size:15px;
+  background:#fff;
+  color:#14213d;
+  outline:none;
+  transition:.2s ease;
+}
+
+input:focus,select:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+label{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  color:#334155;
+  margin-top:4px;
 }</style></head><body>
 <header><div class="brand"><img src="logo.png"><div><h1>Recreo Activo</h1><p>Tu recreo, tu actividad.</p></div></div></header>
 <div class="wrap">
