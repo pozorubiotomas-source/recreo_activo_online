@@ -155,7 +155,11 @@ async function removeActivity(id){
     .eq('id',id)
     .eq('creator_id',user.id);
 
-  if(error)return toast(error.message);
+ if(error){
+  console.error('ERROR AL UNIRSE:', error);
+  toast(error.message);
+  return;
+}
 
   toast('Actividad eliminada');
   loadActivities();
