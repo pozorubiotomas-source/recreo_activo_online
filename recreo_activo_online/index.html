@@ -62,7 +62,7 @@ async function login(){if(!configured)return msg('Primero configura Supabase en 
 async function logout(){if(sb)await sb.auth.signOut();location.reload()}
 async function enterApp(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');show('home');loadProfile()}
 async function createActivity(){let name=document.getElementById('name').value.trim();if(!name)return toast('Escribe un nombre.');let row={creator_id:user.id,name,type:document.getElementById('type').value,time:document.getElementById('time').value||'Por definir',place:document.getElementById('place').value||'Por definir',spots:Math.max(2,Number(document.getElementById('spots').value)||10)};let {error}=await sb.from('activities').insert(row);if(error)return toast(error.message);['name','time','place'].forEach(id=>document.getElementById(id).value='');toast('Actividad publicada');show('home')}
-function card(a){
+function card(a)
   let mine=(a.participants||[]).some(p=>p.user_id===user.id);
   let full=(a.participants||[]).length>=a.spots;
   let creator=a.profiles?.name||'Usuario';
