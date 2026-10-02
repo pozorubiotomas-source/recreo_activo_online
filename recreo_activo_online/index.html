@@ -380,17 +380,7 @@ async function signup(){
       return;
     }
 
-    let {error:profileError}=await sb.from('profiles').upsert({
-      id:data.user.id,
-      name:email.split('@')[0],
-      course:''
-    });
-
-    if(profileError){
-      console.error('Error creando perfil:',profileError);
-      msg('La cuenta se creó, pero hubo un error al crear el perfil: '+profileError.message);
-      return;
-    }
+  
 
     msg('Cuenta creada correctamente. Ahora intenta iniciar sesión.',true);
 
