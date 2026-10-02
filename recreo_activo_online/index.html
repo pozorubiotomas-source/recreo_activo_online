@@ -148,16 +148,12 @@ async function leave(id){
 }
 
 async function removeActivity(id){
-  if(!confirm('¿Eliminar esta actividad?'))return;
-
-  let {error}=await sb.from('activities')
-    .delete()
-    .eq('id',id)
-    .eq('creator_id',user.id);
-
- if(error){
-  console.error('ERROR AL UNIRSE:', error);
-  toast(error.message);
+if(error){
+  alert(
+    'Código: ' + error.code +
+    '\nMensaje: ' + error.message +
+    '\nDetalles: ' + error.details
+  );
   return;
 }
 
