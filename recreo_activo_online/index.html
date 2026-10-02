@@ -572,14 +572,66 @@ function card(a){
     <br>
 
     ${isCreator
-      ? `<button class="btn danger" onclick="removeActivity('${a.id}')">Eliminar</button>`
-      : mine
+  ? `<button class="btn primary" onclick="editActivity('${a.id}')">✏️ Editar</button>
+     <button class="btn danger" onclick="removeActivity('${a.id}')">Eliminar</button>`
+  : mine
         ? `<button class="btn ghost" onclick="leave('${a.id}')">Salir</button>`
         : `<button class="btn primary" ${full?'disabled':''} onclick="join('${a.id}')">${full?'Sin cupos':'Unirme'}</button>`
     }
     </div>`;
 }
 
+async function editActivity(id){
+  const a = activities.find(x => x.id === id);
+
+  if(!a){
+    toast('No se encontró la actividad');
+    return;
+  }
+
+  const name = prompt('Nombre de la actividad:', a.name);
+  if(name === null) return;
+
+  const time = prompt('Horario:', a.time);
+  if(time === null) return;
+
+  const place = prompt('Lugar:', a.place);
+  if(place === null) return;
+
+  const spotsText = prompt('Cantidad de cupos:', a.spots);
+  if(spotsText === null) return;
+
+  const spots = Number(spotsText);
+
+  if(!name.trim() || !time.trim() || !place.trim() || !Number.isInteger(spots) || spots < 2){
+    toast('Revisa los datos. El mínimo es 2 cupos.');
+    return;
+  }
+
+  if(spots < (a.participants || []).length){
+    toast('No puedes poner menos cupos que participantes inscritos.');
+    return;
+  }
+
+  const {error} = await sb
+    .from('activities')
+    .update({
+      name: name.trim(),
+      time: time.trim(),
+      place: place.trim(),
+      spots: spots
+    })
+    .eq('id', id)
+    .eq('creator_id', user.id);
+
+  if(error){
+    toast(error.message);
+    return;
+  }
+
+  toast('Actividad actualizada');
+  loadActivities();
+}A
 function renderActivities(){
   const list=document.getElementById('list');
 
