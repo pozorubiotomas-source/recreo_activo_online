@@ -526,7 +526,51 @@ async function removeActivity(id){
   toast('Actividad eliminada');
   loadActivities();
 }
-async function loadMine(){let {data,error}=await sb.from('participants').select('activity_id,activities(*,participants(activity_id,user_id,profiles!participants_user_id_fkey(name,course)))').eq('user_id',user.id);if(error)return document.getElementById('mineList').innerHTML='<div class="notice">'+error.message+'</div>';let arr=(data||[]).map(x=>x.activities).filter(Boolean);document.getElementById('mineList').innerHTML=arr.length?arr.map(card).join(''):'<div class="empty">Todavía no estás inscrito en actividades.</div>';loadProfile()}async function loadProfile(){let {data}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();if(data){document.getElementById('profileName').value=data.name||'';document.getElementById('profileCourse').value=data.course||''}}
+async function loadMine(){
+  let {data,error}=await sb
+    .from('participants')
+    .select(`
+      activity_id,
+      activities(
+        *,
+        profiles!activities_creator_id_fkey(name,course),
+        participants(
+          activity_id,
+          user_id,
+          profiles!participants_user_id_fkey(name,course)
+        )
+      )
+    `)
+    .eq('user_id',user.id);
+
+  if(error){
+    document.getElementById('mineList').innerHTML=
+      '<div class="notice">'+error.message+'</div>';
+    return;
+  }
+
+  let arr=(data||[])
+    .map(x=>x.activities)
+    .filter(Boolean);
+
+  document.getElementById('mineList').innerHTML=
+    arr.length
+      ? arr.map(card).join('')
+      : '<div class="empty">Todavía no estás inscrito en actividades.</div>';
+
+  loadProfile();
+}async function loadProfile(){
+  let {data}=await sb
+    .from('profiles')
+    .select('*')
+    .eq('id',user.id)
+    .maybeSingle();
+
+  if(data){
+    document.getElementById('profileName').value=data.name||'';
+    document.getElementById('profileCourse').value=data.course||'';
+  }
+}
 async function saveProfile(){let {error}=await sb.from('profiles').upsert({id:user.id,name:document.getElementById('profileName').value.trim(),course:document.getElementById('profileCourse').value.trim()});if(error)return toast(error.message);toast('Perfil guardado')}
 function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 (async()=>{if(!configured){msg('La app ya está preparada para funcionar online. Falta conectar tu proyecto de Supabase.');return}let {data}=await sb.auth.getSession();if(data.session){user=data.session.user;enterApp()}setInterval(()=>{if(user)loadActivities()},10000)})();
