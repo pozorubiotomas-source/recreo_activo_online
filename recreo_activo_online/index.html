@@ -154,14 +154,18 @@ async function leave(id){
 }
 
 async function removeActivity(id){
-if(error){
-  alert(
-    'Código: ' + error.code +
-    '\nMensaje: ' + error.message +
-    '\nDetalles: ' + error.details
-  );
-  return;
-}
+  if(!confirm('¿Eliminar esta actividad?')) return;
+
+  const {error} = await sb
+    .from('activities')
+    .delete()
+    .eq('id', id)
+    .eq('creator_id', user.id);
+
+  if(error){
+    toast(error.message);
+    return;
+  }
 
   toast('Actividad eliminada');
   loadActivities();
