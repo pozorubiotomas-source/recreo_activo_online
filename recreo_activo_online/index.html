@@ -207,6 +207,136 @@ label{
   font-weight:700;
   color:#334155;
   margin-top:4px;
+}/* Mejoras Crear actividad */
+#create .card{
+  padding:24px 20px;
+}
+
+#create .primary{
+  padding:13px 20px;
+  font-size:15px;
+  min-width:180px;
+}
+
+#create label{
+  margin-top:3px;
+}
+
+#create input,
+#create select{
+  min-height:46px;
+}/* Mejoras Mis actividades */
+#mine .empty{
+  background:#f8fafc;
+  border:1px dashed #cbd5e1;
+  border-radius:14px;
+  padding:22px;
+  margin:12px 0 18px;
+  color:#64748b;
+}
+
+#mine .card{
+  padding:20px;
+}
+
+#mine .card h3{
+  margin-top:0;
+}
+
+#mine .primary{
+  padding:12px 18px;
+}/* Diseño para celulares */
+@media (max-width:600px){
+
+  body{
+    background:#f4f7fb;
+  }
+
+  .wrap{
+    padding:10px;
+  }
+
+  header{
+    padding:18px 16px;
+    border-radius:0 0 22px 22px;
+  }
+
+  .brand img{
+    width:58px;
+    height:58px;
+  }
+
+  .brand h1{
+    font-size:22px;
+  }
+
+  .brand p{
+    font-size:13px;
+  }
+
+  .tabs{
+    gap:4px;
+    padding:6px;
+    top:5px;
+  }
+
+  .tabs button{
+    padding:10px 4px;
+    font-size:12px;
+  }
+
+  .card{
+    padding:16px;
+    border-radius:16px;
+  }
+
+  .card h3{
+    font-size:18px;
+  }
+
+  .topline h2,
+  .screen h2{
+    font-size:21px;
+  }
+
+  input,select{
+    font-size:16px;
+  }
+
+  .btn{
+    min-height:42px;
+  }
+
+  #create .primary{
+    width:100%;
+  }
+
+  .logoBig{
+    width:95px;
+  }
+}/* Navegación estilo app en celular */
+@media (max-width:600px){
+
+  .tabs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:4px;
+    padding:6px;
+  }
+
+  .tabs button{
+    min-width:0;
+    padding:9px 2px;
+    font-size:11px;
+    line-height:1.25;
+    text-align:center;
+    border-radius:10px;
+  }
+
+  .tabs button.active{
+    background:#2563eb;
+    color:#fff;
+  }
 }</style></head><body>
 <header><div class="brand"><img src="logo.png"><div><h1>Recreo Activo</h1><p>Tu recreo, tu actividad.</p></div></div></header>
 <div class="wrap">
