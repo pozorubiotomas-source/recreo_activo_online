@@ -27,7 +27,38 @@ async function login(){if(!configured)return msg('Primero configura Supabase en 
 async function logout(){if(sb)await sb.auth.signOut();location.reload()}
 async function enterApp(){document.getElementById('auth').classList.add('hidden');document.getElementById('app').classList.remove('hidden');show('home');loadProfile()}
 async function createActivity(){let name=document.getElementById('name').value.trim();if(!name)return toast('Escribe un nombre.');let row={creator_id:user.id,name,type:document.getElementById('type').value,time:document.getElementById('time').value||'Por definir',place:document.getElementById('place').value||'Por definir',spots:Math.max(2,Number(document.getElementById('spots').value)||10)};let {error}=await sb.from('activities').insert(row);if(error)return toast(error.message);['name','time','place'].forEach(id=>document.getElementById(id).value='');toast('Actividad publicada');show('home')}
-function renderActivities(){
+function card(a){
+  let mine=(a.participants||[]).some(p=>p.user_id===user.id);
+  let full=(a.participants||[]).length>=a.spots;
+  let creator=a.profiles?.name||'Usuario';
+  let isCreator=a.creator_id===user.id;
+
+  return `<div class="card">
+    <div class="row">
+      <div>
+        <span class="badge">${esc(a.type)}</span>
+        <h3>${esc(a.name)}</h3>
+      </div>
+      <strong>${(a.participants||[]).length}/${a.spots}</strong>
+    </div>
+
+    <p>🕒 ${esc(a.time)} · 📍 ${esc(a.place)}</p>
+    <p class="muted">Creado por ${esc(creator)}</p>
+
+    <div class="people">
+      ${(a.participants||[]).map(p=>esc(p.profiles?.name||'Usuario')).join(', ')}
+    </div>
+
+    <br>
+
+    ${isCreator
+      ? `<button class="btn danger" onclick="removeActivity('${a.id}')">Eliminar</button>`
+      : mine
+        ? `<button class="btn ghost" onclick="leave('${a.id}')">Salir</button>`
+        : `<button class="btn primary" ${full?'disabled':''} onclick="join('${a.id}')">${full?'Sin cupos':'Unirme'}</button>`
+    }
+  </div>`;
+}function renderActivities(){
   const list=document.getElementById('list');
 
   if(!activities || activities.length===0){
