@@ -481,7 +481,34 @@ select:focus{
 <div id="app" class="hidden">
 <div class="tabs"><button id="tHome" onclick="show('home')">🏠 Inicio</button><button id="tCreate" onclick="show('create')">➕ Crear</button><button id="tMine" onclick="show('mine')">👤 Mis actividades</button><button onclick="logout()">🚪 Salir</button></div>
 <section id="home" class="screen"><div class="topline"><h2>Actividades</h2><button class="btn ghost smallbtn" onclick="loadActivities()">↻ Actualizar</button></div><div id="list"></div></section>
-<section id="create" class="screen"><h2>Crear actividad</h2><div class="card"><label>Nombre</label><input id="name" placeholder="Ej: Partido de fútbol"><label>Tipo</label><select id="type"><option>⚽ Deporte</option><option>🎮 Juego</option><option>🏆 Torneo</option><option>🎨 Otra actividad</option></select><label>Horario</label><input id="time" placeholder="Ej: Recreo 11:30"><label>Lugar</label><input id="place" placeholder="Ej: Cancha del colegio"><label>Cupos</label><input id="spots" type="number" min="2" value="10"><button class="btn primary" onclick="createActivity()">Publicar actividad</button></div></section>
+<section id="create" class="screen"><h2>Crear actividad</h2><div class="card"><label>Nombre</label><input id="name" placeholder="Ej: Partido de fútbol"><label>Tipo</label><select id="type"><option>⚽ Deporte</option><option>🎮 Juego</option><option>🏆 Torneo</option><option>🎨 Otra actividad</option></select><label>Horario</label><input id="time" placeholder="Ej: Recreo 11:30"><label>Lugar</label><input id="place" placeholder="Ej: Cancha del colegio"><label>Cupos</label><input id="spots" type="number" min="2" value="10"><button class="btn primary" onclick="createActivity()">Publicar actividad</button></div></section><section id="edit" class="screen">
+  <h2>Editar actividad</h2>
+
+  <div class="card">
+    <label>Nombre</label>
+    <input id="editName" placeholder="Nombre de la actividad">
+
+    <label>Tipo</label>
+    <select id="editType">
+      <option>⚽ Deporte</option>
+      <option>🎮 Juego</option>
+      <option>🏆 Torneo</option>
+      <option>🎨 Otra actividad</option>
+    </select>
+
+    <label>Horario</label>
+    <input id="editTime" placeholder="Ej: Recreo 11:30">
+
+    <label>Lugar</label>
+    <input id="editPlace" placeholder="Ej: Cancha del colegio">
+
+    <label>Cupos</label>
+    <input id="editSpots" type="number" min="2">
+
+    <button class="btn primary" onclick="saveActivityEdit()">Guardar cambios</button>
+    <button class="btn ghost" onclick="cancelActivityEdit()">Cancelar</button>
+  </div>
+</section>
 <section id="mine" class="screen"><h2>Mis actividades</h2><div id="mineList"></div><div class="card"><h3>Mi perfil</h3><input id="profileName" placeholder="Nombre"><input id="profileCourse" placeholder="Curso, ej. 4°A"><button class="btn primary" onclick="saveProfile()">Guardar perfil</button></div></section>
 </div></div><div id="toast" class="toast"></div>
 <script>
@@ -581,7 +608,9 @@ function card(a){
     </div>`;
 }
 
-async function editActivity(id){
+let editingActivityId = null;
+
+function editActivity(id){
   const a = activities.find(x => x.id === id);
 
   if(!a){
@@ -589,24 +618,68 @@ async function editActivity(id){
     return;
   }
 
-  const name = prompt('Nombre de la actividad:', a.name);
-  if(name === null) return;
+  editingActivityId = id;
 
-  const time = prompt('Horario:', a.time);
-  if(time === null) return;
+  document.getElementById('editName').value = a.name || '';
+  document.getElementById('editType').value = a.type || '';
+  document.getElementById('editTime').value = a.time || '';
+  document.getElementById('editPlace').value = a.place || '';
+  document.getElementById('editSpots').value = a.spots || 2;
 
-  const place = prompt('Lugar:', a.place);
-  if(place === null) return;
+  show('edit');
+}
 
-  const spotsText = prompt('Cantidad de cupos:', a.spots);
-  if(spotsText === null) return;
+async function saveActivityEdit(){
+  const a = activities.find(x => x.id === editingActivityId);
 
-  const spots = Number(spotsText);
+  if(!a){
+    toast('No se encontró la actividad');
+    return;
+  }
 
-  if(!name.trim() || !time.trim() || !place.trim() || !Number.isInteger(spots) || spots < 2){
+  const name = document.getElementById('editName').value.trim();
+  const type = document.getElementById('editType').value;
+  const time = document.getElementById('editTime').value.trim();
+  const place = document.getElementById('editPlace').value.trim();
+  const spots = Number(document.getElementById('editSpots').value);
+
+  if(!name || !time || !place || !Number.isInteger(spots) || spots < 2){
     toast('Revisa los datos. El mínimo es 2 cupos.');
     return;
   }
+
+  if(spots < (a.participants || []).length){
+    toast('No puedes poner menos cupos que participantes inscritos.');
+    return;
+  }
+
+  const {error} = await sb
+    .from('activities')
+    .update({
+      name,
+      type,
+      time,
+      place,
+      spots
+    })
+    .eq('id', editingActivityId)
+    .eq('creator_id', user.id);
+
+  if(error){
+    toast(error.message);
+    return;
+  }
+
+  editingActivityId = null;
+  toast('Actividad actualizada');
+  await loadActivities();
+  show('home');
+}
+
+function cancelActivityEdit(){
+  editingActivityId = null;
+  show('home');
+}
 
   if(spots < (a.participants || []).length){
     toast('No puedes poner menos cupos que participantes inscritos.');
@@ -624,24 +697,14 @@ async function editActivity(id){
     .eq('id', id)
     .eq('creator_id', user.id);
 
-  if(error){
-    toast(error.message);
-    return;
-  }
-
-  toast('Actividad actualizada');
-  loadActivities();
-}A
-function renderActivities(){
-  const list=document.getElementById('list');
-
+ 
   if(!activities || activities.length===0){
     list.innerHTML='<div class="empty">No hay actividades todavía.</div>';
     return;
   }
 
   list.innerHTML=activities.map(card).join('');
-}
+
 
 async function join(id){
   let {error}=await sb.from('participants').insert({
